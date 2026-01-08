@@ -1,21 +1,30 @@
 int buzzerPin = A5;
 int Buttons[] = {2, 3, 4, 5};
+int Leds[] = {6, 7, 8, 9};
+int tones[] = {440, 494, 523, 587};
 
 void setup() {
   pinMode(buzzerPin, OUTPUT);
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++) {
     pinMode(Buttons[i], INPUT_PULLUP);
+    pinMode(Leds[i], OUTPUT);
+  }
 }
 
 void loop() {
-  if (digitalRead(Buttons[0]) == LOW)
-    tone(buzzerPin, 440);
-  else if (digitalRead(Buttons[1]) == LOW)
-    tone(buzzerPin, 494);
-  else if (digitalRead(Buttons[2]) == LOW)
-    tone(buzzerPin, 523);
-  else if (digitalRead(Buttons[3]) == LOW)
-    tone(buzzerPin, 587);
-  else
+  bool active = false;
+
+  for (int i = 0; i < 4; i++) {
+    if (digitalRead(Buttons[i]) == LOW) {
+      tone(buzzerPin, tones[i]);
+      digitalWrite(Leds[i], HIGH);
+      active = true;
+    } else {
+      digitalWrite(Leds[i], LOW);
+    }
+  }
+
+  if (!active) {
     noTone(buzzerPin);
+  }
 }
